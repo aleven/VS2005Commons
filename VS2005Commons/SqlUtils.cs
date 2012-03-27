@@ -12,7 +12,7 @@ namespace VS2005Commons
     /// <summary>
     /// 
     /// </summary>
-    public class SqlUtils
+    public class SqlUtils : IDisposable
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -506,5 +506,14 @@ namespace VS2005Commons
         {
             return transaction;
         }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            this.CloseConnection();
+        }
+
+        #endregion
     }
 }
