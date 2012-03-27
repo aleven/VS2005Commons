@@ -132,6 +132,8 @@ namespace VS2005Commons
                     {
                         item.Selected = true;
                         item.Focused = true;
+
+                        item.EnsureVisible();
                     }
                 }
 
@@ -141,6 +143,7 @@ namespace VS2005Commons
 
         public static void Popola(ref ListView aListView, IList aListOfData)
         {
+            aListView.SuspendLayout();
             aListView.BeginUpdate();
             aListView.Items.Clear();
 
@@ -167,6 +170,7 @@ namespace VS2005Commons
             }
 
             aListView.EndUpdate();
+            aListView.ResumeLayout();
         }
     }
 }

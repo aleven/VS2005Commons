@@ -107,6 +107,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="IComboBoxable.cs" />
+    <Compile Include="IDBUtils.cs" />
     <Compile Include="IFormDettaglio.cs" />
     <Compile Include="IListViewItemable.cs" />
     <Compile Include="IRecommendedSize.cs" />

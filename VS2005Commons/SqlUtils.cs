@@ -12,7 +12,7 @@ namespace VS2005Commons
     /// <summary>
     /// 
     /// </summary>
-    public class SqlUtils : IDisposable
+    public class SqlUtils : IDisposable, VS2005Commons.IDBUtils
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
