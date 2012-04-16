@@ -42,7 +42,7 @@
     <Compile Include="SQLiteUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\VS2005\VS2005Commons\VS2005Commons\VS2005Commons.csproj">
+    <ProjectReference Include="..\VS2005Commons\VS2005Commons.csproj">
       <Project>{E8440AF9-89B7-4512-AA95-67E9FF89B38E}</Project>
       <Name>VS2005Commons</Name>
     </ProjectReference>

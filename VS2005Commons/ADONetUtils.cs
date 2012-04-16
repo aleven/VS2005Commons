@@ -20,12 +20,12 @@ namespace VS2005Commons
             return res;
         }
 
-        public static int drToInt(SqlDataReader dr, String campo)
+        public static int drToInt(IDataReader dr, String campo)
         {
             return (dr[campo] != Convert.DBNull) ? (int)dr[campo] : 0;
         }
 
-        public static long drToLong(SqlDataReader dr, String campo)
+        public static long drToLong(IDataReader dr, String campo)
         {
             return (dr[campo] != Convert.DBNull) ? (long)dr[campo] : 0l;
         }

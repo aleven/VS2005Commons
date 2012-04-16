@@ -11,13 +11,13 @@ namespace VS2005Commons
     /// <summary>
     /// 
     /// </summary>
-    public class SQLiteUtils : IDisposable
+    public class SQLiteUtils : IDisposable, VS2005Commons.IDBUtils<System.Data.SqlClient.SqlConnection, System.Data.SqlClient.SqlTransaction, System.Data.SqlClient.SqlCommand, System.Data.SqlClient.SqlDataReader>
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
         private String connectionString;
-        private SQLiteConnection conn;
-        private SQLiteTransaction transaction;
+        private System.Data.SqlClient.SqlConnection conn;
+        private System.Data.SqlClient.SqlTransaction transaction;
         private bool passedConnection = false;
         private bool transactionOpen = false;
 
@@ -30,14 +30,14 @@ namespace VS2005Commons
         }
 
         [DebuggerStepThrough]
-        public SQLiteUtils(SQLiteConnection conn)
+        public SQLiteUtils(System.Data.SqlClient.SqlConnection conn)
         {
             this.conn = conn;
             passedConnection = true;
         }
 
         [DebuggerStepThroughAttribute]
-        public SQLiteUtils(SQLiteConnection conn, SQLiteTransaction transaction)
+        public SQLiteUtils(System.Data.SqlClient.SqlConnection conn, System.Data.SqlClient.SqlTransaction transaction)
             : this(conn)
         {
             // this.conn = conn;
@@ -45,18 +45,40 @@ namespace VS2005Commons
             // passedConnection = true;
         }
 
+        public static SQLiteUtils getIstance(String connectionString)
+        {
+            return new SQLiteUtils(connectionString);
+        }
+
+        public static SQLiteUtils getIstance(System.Data.SqlClient.SqlConnection conn)
+        {
+            return new SQLiteUtils(conn);
+        }
+
+        public static SQLiteUtils getIstance(System.Data.SqlClient.SqlConnection conn, System.Data.SqlClient.SqlTransaction transaction)
+        {
+            return new SQLiteUtils(conn, transaction);
+        }
+
+        public static System.Data.SqlClient.SqlConnection createConnection(String connectionString)
+        {
+            return new System.Data.SqlClient.SqlConnection(connectionString);
+        }
+
         /// <summary>
-        /// Returns a new SQLiteConnection instance
+        /// Returns a new System.Data.SqlClient.SqlConnection instance
         /// </summary>
         // [DebuggerStepThroughAttribute]
-        public SQLiteConnection GetConnection()
+        public System.Data.SqlClient.SqlConnection GetConnection()
         {
             // TODO: RETRIVE CONNECTION STRING
-            // SQLiteConnection retVal = new SQLiteConnection(this.connectionString);
-            //SQLiteConnection retVal = new SQLiteConnection();
+            // System.Data.SqlClient.SqlConnection retVal = new System.Data.SqlClient.SqlConnection(this.connectionString);
+            //System.Data.SqlClient.SqlConnection retVal = new System.Data.SqlClient.SqlConnection();
             if (conn == null)
             {
-                this.conn = new SQLiteConnection(this.connectionString);
+                // this.conn = new System.Data.SqlClient.SqlConnection(this.connectionString);
+                this.conn = createConnection(this.connectionString);
+
                 //logger.Debug(connectionString);
                 //logger.Debug("Opening connection ... ");
                 //this.conn.Open();
@@ -66,20 +88,20 @@ namespace VS2005Commons
         }
 
         /// <summary>
-        /// Returns a new SQLiteCommand instance
+        /// Returns a new System.Data.SqlClient.SqlCommand instance
         /// </summary>
         /// <param name="query">The text of the query</param>
-        public SQLiteCommand CreateCommand(String query)
+        public System.Data.SqlClient.SqlCommand CreateCommand(String query)
         {
-            // return (GetTransaction() != null) ? new SQLiteCommand(query, GetConnection(), GetTransaction()) : new SQLiteCommand(query, GetConnection());
-            return new SQLiteCommand(query, GetConnection(), GetTransaction());
+            // return (GetTransaction() != null) ? new System.Data.SqlClient.SqlCommand(query, GetConnection(), GetTransaction()) : new System.Data.SqlClient.SqlCommand(query, GetConnection());
+            return new System.Data.SqlClient.SqlCommand(query, GetConnection(), GetTransaction());
         }
 
         /// <summary>
         /// Run a SQL Command INSERT, UPDATE, DELETE
         /// </summary>
         /// <param name="cmd">Command to Execute</param>
-        public int ExecuteCommand(SQLiteCommand cmd)
+        public int ExecuteCommand(System.Data.SqlClient.SqlCommand cmd)
         {
             cmd.Connection = GetConnection();
             cmd.Transaction = GetTransaction();
@@ -91,7 +113,7 @@ namespace VS2005Commons
         /// </summary>
         /// <param name="cmd">Command to Execute</param>
         /// <param name="keepOpenConnection">If false the connection will close</param>
-        private int ExecuteCommand(SQLiteCommand cmd, bool keepOpenConnection)
+        private int ExecuteCommand(System.Data.SqlClient.SqlCommand cmd, bool keepOpenConnection)
         {
             int res = -1;
 
@@ -129,9 +151,9 @@ namespace VS2005Commons
         /// </summary>
         /// <param name="cmd"></param>
         /// <returns></returns>
-        public SQLiteDataReader ExecuteReader(SQLiteCommand cmd, bool keepOpenConnection)
+        public System.Data.SqlClient.SqlDataReader ExecuteReader(System.Data.SqlClient.SqlCommand cmd, bool keepOpenConnection)
         {
-            SQLiteDataReader res = null;
+            System.Data.SqlClient.SqlDataReader res = null;
 
             try
             {
@@ -168,7 +190,7 @@ namespace VS2005Commons
         /// Run a SELECT comand which return a single value
         /// </summary>
         /// <param name="cmd">Command to Execute</param>
-        public object ExecuteScalar(SQLiteCommand cmd)
+        public object ExecuteScalar(System.Data.SqlClient.SqlCommand cmd)
         {
             cmd.Connection = GetConnection();
             cmd.Transaction = GetTransaction();
@@ -180,7 +202,7 @@ namespace VS2005Commons
         /// </summary>
         /// <param name="cmd">Command to Execute</param>
         /// <param name="keepOpenConnection">If false the connection will close</param>
-        private object ExecuteScalar(SQLiteCommand cmd, bool keepOpenConnection)
+        private object ExecuteScalar(System.Data.SqlClient.SqlCommand cmd, bool keepOpenConnection)
         {
             object ret = null;
             try
@@ -209,24 +231,24 @@ namespace VS2005Commons
 
 
         /// <summary>
-        /// Execute more SQLiteCommands into a SQLiteTransaction
+        /// Execute more SQLiteCommands into a System.Data.SqlClient.SqlTransaction
         /// </summary>
         /// <param name="commands"></param>
-        public void ExecuteTransactedCommand(params SQLiteCommand[] commands)
+        public void ExecuteTransactedCommand(params System.Data.SqlClient.SqlCommand[] commands)
         {
 
-            SQLiteConnection conn = GetConnection();
+            System.Data.SqlClient.SqlConnection conn = GetConnection();
             if (conn.State == ConnectionState.Closed)
             {
                 conn.Open();
                 contatoreConnessioniAperte = contatoreConnessioniAperte + 1;
             }
 
-            SQLiteTransaction trans = conn.BeginTransaction();
+            System.Data.SqlClient.SqlTransaction trans = conn.BeginTransaction();
 
             try
             {
-                foreach (SQLiteCommand cmd in commands)
+                foreach (System.Data.SqlClient.SqlCommand cmd in commands)
                 {
                     cmd.Connection = conn;
                     cmd.Transaction = trans;
@@ -253,12 +275,12 @@ namespace VS2005Commons
             }
         }
 
-        public bool ExecuteExist(SQLiteCommand cmd)
+        public bool ExecuteExist(System.Data.SqlClient.SqlCommand cmd)
         {
             bool res;
 
             cmd.Connection = GetConnection();
-            SQLiteDataReader dr = null;
+            System.Data.SqlClient.SqlDataReader dr = null;
 
             try
             {
@@ -295,11 +317,11 @@ namespace VS2005Commons
             return res;
         }
 
-        public static SQLiteParameter CreateParameter(string parameterName, object value)
+        public static System.Data.SqlClient.SqlParameter CreateParameter(string parameterName, object value)
         {
-            SQLiteParameter ret = new SQLiteParameter();
+            System.Data.SqlClient.SqlParameter ret = new System.Data.SqlClient.SqlParameter();
 
-            // ret = new SQLiteParameter("Test", SqlDbType.DateTime);
+            // ret = new System.Data.SqlClient.SqlParameter("Test", SqlDbType.DateTime);
 
             ret.ParameterName = parameterName;
             if (value != null)
@@ -337,18 +359,18 @@ namespace VS2005Commons
         public int EmptyTable(string tableName)
         {
             String SQL = "DELETE FROM " + tableName;
-            SQLiteCommand cmd = this.CreateCommand(SQL);
+            System.Data.SqlClient.SqlCommand cmd = this.CreateCommand(SQL);
             return this.ExecuteCommand(cmd);
         }
 
-        public SQLiteDataReader SelectAllFromTable(string tableName, bool keepOpenConnection)
+        public System.Data.SqlClient.SqlDataReader SelectAllFromTable(string tableName, bool keepOpenConnection)
         {
             String SQL = "SELECT * FROM " + tableName;
-            SQLiteCommand cmd = this.CreateCommand(SQL);
+            System.Data.SqlClient.SqlCommand cmd = this.CreateCommand(SQL);
             return this.ExecuteReader(cmd, keepOpenConnection);
         }
 
-        public SQLiteDataReader SelectAllFromTable(string tableName, string where, string sort, bool keepOpenConnection)
+        public System.Data.SqlClient.SqlDataReader SelectAllFromTable(string tableName, string where, string sort, bool keepOpenConnection)
         {
             StringBuilder SQL = new StringBuilder();
             SQL.Append("SELECT * FROM " + tableName);
@@ -361,11 +383,11 @@ namespace VS2005Commons
                 SQL.Append(" ORDER BY " + sort);
             }
 
-            SQLiteCommand cmd = this.CreateCommand(SQL.ToString());
+            System.Data.SqlClient.SqlCommand cmd = this.CreateCommand(SQL.ToString());
             return this.ExecuteReader(cmd, keepOpenConnection);
         }
 
-        public SQLiteDataReader SelectTop1FromTable(string tableName, string where, string sort, bool keepOpenConnection)
+        public System.Data.SqlClient.SqlDataReader SelectTop1FromTable(string tableName, string where, string sort, bool keepOpenConnection)
         {
             StringBuilder SQL = new StringBuilder();
             SQL.AppendFormat("SELECT * FROM {0} ", tableName);
@@ -379,11 +401,11 @@ namespace VS2005Commons
             }
             SQL.AppendFormat(" LIMIT {0}", 1);
 
-            SQLiteCommand cmd = this.CreateCommand(SQL.ToString());
+            System.Data.SqlClient.SqlCommand cmd = this.CreateCommand(SQL.ToString());
             return this.ExecuteReader(cmd, keepOpenConnection);
         }
 
-        public SQLiteDataReader SelectTopNFromTable(string tableName, string where, string sort, int topN, bool keepOpenConnection)
+        public System.Data.SqlClient.SqlDataReader SelectTopNFromTable(string tableName, string where, string sort, int topN, bool keepOpenConnection)
         {
             StringBuilder SQL = new StringBuilder();
             SQL.AppendFormat("SELECT * FROM {0} ", tableName);
@@ -397,7 +419,7 @@ namespace VS2005Commons
             }
             SQL.AppendFormat(" LIMIT {0}", topN);
 
-            SQLiteCommand cmd = this.CreateCommand(SQL.ToString());
+            System.Data.SqlClient.SqlCommand cmd = this.CreateCommand(SQL.ToString());
             return this.ExecuteReader(cmd, keepOpenConnection);
         }
 
@@ -418,15 +440,15 @@ namespace VS2005Commons
                 SQL.Append(" WHERE " + where);
             }
 
-            SQLiteCommand cmd = this.CreateCommand(SQL.ToString());
+            System.Data.SqlClient.SqlCommand cmd = this.CreateCommand(SQL.ToString());
             return Convert.ToInt64(this.ExecuteScalar(cmd, keepOpenConnection));
         }
 
         //public void EmptyTable(string tableName,
-        //    SQLiteConnection conn)
+        //    System.Data.SqlClient.SqlConnection conn)
         //{
         //    String SQL = "DELETE FROM " + tableName;
-        //    SQLiteCommand cmd = this.CreateCommand(SQL);
+        //    System.Data.SqlClient.SqlCommand cmd = this.CreateCommand(SQL);
         //    cmd.Connection = conn;
         //    this.ExecuteCommand(cmd, true);
         //}
@@ -448,9 +470,9 @@ namespace VS2005Commons
             }
         }
 
-        //public static SQLiteParameter CreateParameter(String name, Object value)
+        //public static System.Data.SqlClient.SqlParameter CreateParameter(String name, Object value)
         //{
-        //    SQLiteParameter param = new SQLiteParameter();
+        //    System.Data.SqlClient.SqlParameter param = new System.Data.SqlClient.SqlParameter();
         //    param.ParameterName = name;
         //    param.Value = value;
 
@@ -504,7 +526,7 @@ namespace VS2005Commons
         }
 
         [DebuggerStepThroughAttribute]
-        public SQLiteTransaction GetTransaction()
+        public System.Data.SqlClient.SqlTransaction GetTransaction()
         {
             return transaction;
         }
