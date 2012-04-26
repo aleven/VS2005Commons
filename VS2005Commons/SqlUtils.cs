@@ -372,6 +372,18 @@ namespace VS2005Commons
             return this.ExecuteCommand(cmd);
         }
 
+        public int DeleteFromTable(string tableName, string where)
+        {
+            StringBuilder SQL = new StringBuilder();
+            SQL.Append("DELETE FROM " + tableName);
+            if (StringUtils.isNotEmpty(where))
+            {
+                SQL.Append(" WHERE " + where);
+            }
+            System.Data.SqlClient.SqlCommand cmd = this.CreateCommand(SQL.ToString());
+            return this.ExecuteCommand(cmd);
+        }
+
         public System.Data.SqlClient.SqlDataReader SelectAllFromTable(string tableName, bool keepOpenConnection)
         {
             String SQL = "SELECT * FROM " + tableName;
@@ -581,5 +593,17 @@ namespace VS2005Commons
         }
 
         #endregion
+
+        /// <summary>
+        /// In SQLCe non posso fare DataReader.HasRows
+        /// </summary>
+        /// <param name="dr"></param>
+        /// <returns></returns>
+        public static bool HasRows(System.Data.SqlClient.SqlDataReader dr)
+        {
+            // return dr.Read();
+            return dr.HasRows;
+            // return true;
+        }
     }
 }
