@@ -63,7 +63,7 @@ namespace VS2005Commons
             return new SqlUtils(conn, transaction);
         }
 
-        public static System.Data.SqlClient.SqlConnection createConnection(String connectionString)
+        public static System.Data.SqlClient.SqlConnection createNewConnection(String connectionString)
         {
             return new System.Data.SqlClient.SqlConnection(connectionString);
         }
@@ -80,7 +80,7 @@ namespace VS2005Commons
             if (conn == null)
             {
                 // this.conn = new System.Data.SqlClient.SqlConnection(this.connectionString);
-                this.conn = createConnection(this.connectionString);
+                this.conn = createNewConnection(this.connectionString);
                 //logger.Debug(connectionString);
                 //logger.Debug("Opening connection ... ");
                 //this.conn.Open();
@@ -386,15 +386,38 @@ namespace VS2005Commons
 
         public System.Data.SqlClient.SqlDataReader SelectAllFromTable(string tableName, bool keepOpenConnection)
         {
-            String SQL = "SELECT * FROM " + tableName;
-            System.Data.SqlClient.SqlCommand cmd = this.CreateCommand(SQL);
-            return this.ExecuteReader(cmd, keepOpenConnection);
+            //String SQL = "SELECT * FROM " + tableName;
+            //System.Data.SqlClient.SqlCommand cmd = this.CreateCommand(SQL);
+            //return this.ExecuteReader(cmd, keepOpenConnection);
+            return SelectAllFromTable(tableName, "", "", "", keepOpenConnection);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="where"></param>
+        /// <param name="sort"></param>
+        /// <param name="keepOpenConnection"></param>
+        /// <returns></returns>
         public System.Data.SqlClient.SqlDataReader SelectAllFromTable(string tableName, string where, string sort, bool keepOpenConnection)
         {
+            return SelectAllFromTable(tableName, "", where, sort, keepOpenConnection);
+        }
+
+        public System.Data.SqlClient.SqlDataReader SelectAllFromTable(string tableName, string columnList, string where, string sort, bool keepOpenConnection)
+        {
             StringBuilder SQL = new StringBuilder();
-            SQL.Append("SELECT * FROM " + tableName);
+
+            if (StringUtils.isNullOrEmpty(columnList))
+            {
+                SQL.Append("SELECT * FROM " + tableName);
+            }
+            else
+            {
+                SQL.Append("SELECT " + columnList + " FROM " + tableName);
+            }
+
             if (StringUtils.isNotEmpty(where))
             {
                 SQL.Append(" WHERE " + where);
