@@ -6,7 +6,6 @@ using System.Data;
 using System.Windows.Forms;
 using NLog;
 using System.Diagnostics;
-using System.Data.SQLite;
 
 namespace VS2005Commons
 {

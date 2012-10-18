@@ -128,6 +128,7 @@
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryUtils.cs" />
+    <Compile Include="SqlUtils.cs" />
     <Compile Include="StringUtils.cs" />
     <Compile Include="UIUtils.cs" />
     <Compile Include="UMUtils.cs" />
