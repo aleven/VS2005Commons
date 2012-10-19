@@ -551,9 +551,6 @@ namespace VS2005Commons
         [DebuggerStepThroughAttribute]
         public void BeginTransaction()
         {
-            /*
-             * Ripristinato da Mirco 27/03
-             */
             if (transaction == null) // era commentato
             {
                 if (GetConnection().State != ConnectionState.Open)
@@ -569,7 +566,6 @@ namespace VS2005Commons
         [DebuggerStepThroughAttribute]
         public void Commit()
         {
-
             if (transaction != null)
             {
                 transaction.Commit();
@@ -589,7 +585,6 @@ namespace VS2005Commons
              * anche se dovessi fare il commit e poi succede una eccezione per qualche altro motivo
              * questo non solleva piu' l'eccezione che la transazione e' gia stata chiusa
              */
-
             if (transaction != null && transactionOpen)
             {
                 transaction.Rollback();
