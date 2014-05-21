@@ -158,5 +158,23 @@ namespace VS2005Commons
 
             return res;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aString"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static string Default(string aString, string defaultValue)
+        {
+            String res = defaultValue;
+
+            if (StringUtils.isNotEmpty(aString))
+            {
+                res = aString;
+            }
+
+            return res;
+        }
     }
 }
