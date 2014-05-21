@@ -57,6 +57,62 @@ namespace VS2005Commons
             return condition;
         }
 
+
+        /// <summary>
+        /// Prepara una condizione like da usare nelle query.
+        /// Support query del tipo:
+        /// 1) *ca
+        /// 2) ca*
+        /// 3) *ca*
+        /// </summary>
+        /// <param name="columnName">La colonna</param>
+        /// <param name="filter">Il filtro da usare (deve essere filtrato con forQuery)</param>
+        /// <returns></returns>
+        public static string likeCondition2(string columnName, string filter)
+        {
+            string condition = "";
+
+            if (StringUtils.isNullOrEmpty(filter))
+            {
+                condition = "TRUE";
+            }
+            else
+            {
+                if (filter.StartsWith(CARATTERE_JOLLY) || filter.EndsWith(CARATTERE_JOLLY))
+                {
+                    // Ricerche per testo che inizia con o finisce con
+                    // Esempio:
+                    // ca*
+                    // *ca
+                    condition = columnName + " LIKE '" + filter + "'";
+                }
+                else
+                {
+                    // Ricerche per testo che contiene
+                    condition = columnName + " LIKE '" + CARATTERE_JOLLY + filter + CARATTERE_JOLLY + "'";
+
+                    condition = "(";
+                    for (int i = 0; i < filter.Length; i++)
+                    {
+                        char piece = filter[i];
+                        String a = columnName + " LIKE '" + CARATTERE_JOLLY + piece + CARATTERE_JOLLY + "'";
+
+                        if (condition.Length == 1)
+                        {
+                            condition = condition + a;
+                        }
+                        else
+                        {
+                            condition = condition + " AND " + a;
+                        }
+
+                    }
+                    condition = condition + ")";
+                }
+            }
+            return condition;
+        }
+
         /// <summary>
         /// Come likeCondition ma supporta la sostituzione automatica dei caratteri speciali
         /// se non viene fatta dall'utente
