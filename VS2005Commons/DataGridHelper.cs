@@ -22,6 +22,8 @@ namespace VS2005Commons
         /// <param name="e"></param>
         public void GestioneNumericPad(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
+            // dataGrid.Columns[dataGrid.CurrentCell.ColumnIndex].Type;
+
             TextBox innerTextBox;
             if (e.Control is TextBox)
             {
@@ -67,7 +69,8 @@ namespace VS2005Commons
 
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
-            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            // dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
         public static void ConfigureEditable(ref DataGridView dgv)
