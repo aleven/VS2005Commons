@@ -33,11 +33,40 @@ namespace VS2005Commons
             return res;
         }
 
+        /// <summary>
+        /// Scrive su un file il testo specificato, crea sempre un file nuovo
+        /// </summary>
+        /// <param name="nomeFile"></param>
+        /// <param name="testo"></param>
         public static void ScriviFileDiTesto(String nomeFile, String testo)
         {
             using (StreamWriter outfile = new StreamWriter(nomeFile))
             {
                 outfile.Write(testo);
+            }
+        }
+
+        /// <summary>
+        /// Scrive su un file il testo specificato, si può decidere se accodare o sovrascrivere
+        /// </summary>
+        /// <param name="nomeFile"></param>
+        /// <param name="testo"></param>
+        /// <param name="accodaSeEsiste">se true nel caso esiste gia il file accoda il testo</param>
+        public static void ScriviFileDiTesto(String nomeFile, String testo, Boolean accodaSeEsiste)
+        {
+            if (accodaSeEsiste && File.Exists(nomeFile))
+            {
+                using (FileStream aFile = new FileStream(nomeFile, FileMode.Append))
+                {
+                    using (StreamWriter outfile = new StreamWriter(aFile))
+                    {
+                        outfile.Write(testo);
+                    }
+                }
+            }
+            else
+            {
+                ScriviFileDiTesto(nomeFile, testo);
             }
         }
 
