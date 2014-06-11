@@ -25,6 +25,16 @@ namespace VS2005Commons
             return res;
         }
 
+        public static bool isBlank(String aString)
+        {
+            return aString == null || aString.Trim().Length == 0;
+        }
+
+        public static bool isNotBlank(String aString)
+        {
+            return !isBlank(aString);
+        }
+
         /// <summary>
         /// Check if a trimmed string is null or empty 
         /// </summary>
@@ -176,5 +186,6 @@ namespace VS2005Commons
 
             return res;
         }
+
     }
 }
