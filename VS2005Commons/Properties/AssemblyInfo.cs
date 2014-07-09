@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("VS2005Commons")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Atree Blu srl")]
+[assembly: AssemblyCompany("Mirco Attocchi")]
 [assembly: AssemblyProduct("VS2005Commons")]
-[assembly: AssemblyCopyright("Copyright © Atree Blu 2010")]
+[assembly: AssemblyCopyright("Copyright © Mirco Attocchi 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
