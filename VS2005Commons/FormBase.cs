@@ -46,7 +46,7 @@ namespace VS2005Commons
         }
 
         private bool enableAutoMaximize = true;
-        [Category("Atree")]
+        [Category("VS2005Commons")]
         [Description("Specifica se si vuole che la finestra si maximizzi automaticamente")]
         public bool EnableAutoMaximize
         {
