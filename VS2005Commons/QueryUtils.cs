@@ -20,6 +20,21 @@ namespace VS2005Commons
             return aString.Replace("'", "''").Trim();
         }
 
+        public static string equalCondition(string columnName, string filter)
+        {
+            string condition = "";
+
+            if (StringUtils.isNullOrEmpty(filter))
+            {
+                condition = "TRUE";
+            }
+            else
+            {
+                condition = columnName + " = '" + encodeString(filter) + "'";
+            }
+            return condition;
+
+        }
         /// <summary>
         /// Prepara una condizione like da usare nelle query.
         /// Support query del tipo:
@@ -92,9 +107,10 @@ namespace VS2005Commons
                     condition = columnName + " LIKE '" + CARATTERE_JOLLY + filter + CARATTERE_JOLLY + "'";
 
                     condition = "(";
-                    for (int i = 0; i < filter.Length; i++)
+                    // for (int i = 0; i < filter.Length; i++)
+                    foreach (String piece in filter.Split(' ')) 
                     {
-                        char piece = filter[i];
+                        // char piece = filter[i];
                         String a = columnName + " LIKE '" + CARATTERE_JOLLY + piece + CARATTERE_JOLLY + "'";
 
                         if (condition.Length == 1)
@@ -105,7 +121,6 @@ namespace VS2005Commons
                         {
                             condition = condition + " AND " + a;
                         }
-
                     }
                     condition = condition + ")";
                 }
